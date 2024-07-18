@@ -26,12 +26,11 @@ class Login : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         initViewAndSetListener()
-        learnPreference()
+//        learnPreference()
     }
 
     private fun learnPreference() {
         Log.d(TAG, "learnPreference: ")
-//        PreferenceHelper.initPreference(this)
         PreferenceHelper.putString("BHANIT", "Value is Rahul")
         val value = PreferenceHelper.getString("BHANIT")
         Log.d(TAG, "learnPreference: value $value")
@@ -65,13 +64,24 @@ class Login : AppCompatActivity(), View.OnClickListener {
     * equals method compares the object itself.
     * */
     private fun validateLoginAndOpenDashboard() {
+        if (!::mEmail.isInitialized || !::mPassword.isInitialized) {
+            Log.d(
+                TAG,
+                "validateLoginAndOpenDashboard: email is not initialized or password is not initialized"
+            )
+            return
+        }
+
         Log.d(TAG, "validateLoginAndOpenDashboard: email $mEmail password $mPassword")
         if (mEmail.equals("bhanit@gmail.com", ignoreCase = true) && mPassword.equals(
                 "1234",
                 true
             )
         ) {
-            PreferenceHelper.putString(Constant.EMAIL_KEY, mEmail)
+            PreferenceHelper.putString(Constant.KEY.EMAIL_KEY, mEmail)
+            PreferenceHelper.putBoolean(
+                Constant.KEY.IS_LOGGED_IN, true
+            )
             openDashboard()
         }
     }
@@ -79,8 +89,8 @@ class Login : AppCompatActivity(), View.OnClickListener {
     private fun openDashboard() {
         Log.d(TAG, "openDashboard: ")
         val bundle = Bundle()
-        bundle.putString(Constant.EMAIL_KEY, mEmail)
-        bundle.putString(Constant.PASSWORD_KEY, mPassword)
+        bundle.putString(Constant.KEY.EMAIL_KEY, mEmail)
+        bundle.putString(Constant.KEY.PASSWORD_KEY, mPassword)
         val intent = Intent(this, DashboardActivity::class.java)
         intent.putExtras(bundle)
         startActivity(intent)
