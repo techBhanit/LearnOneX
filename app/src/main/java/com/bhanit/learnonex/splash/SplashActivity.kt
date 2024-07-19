@@ -42,10 +42,10 @@ class SplashActivity : AppCompatActivity() {
     }
 
     /*
-    * scope function in kotlin,
-    * let,
+    * scope function in kotlin, // Scope function are the function used for write code in a clear and readable way.
+    * let, -> it
     * with,
-    * apply
+    * apply -> this
     * run,
     * also
     * */
@@ -56,13 +56,45 @@ class SplashActivity : AppCompatActivity() {
         )
         if (isLoggedIn) PreferenceHelper.getString(
             Constant.KEY.EMAIL_KEY
-        )?.let {
+        )?.let { value -> //final
             waitAndOpenDashboardActivity(
-                it
+                value
             )
+            return@let
         }
-        else waitAndOpenLoginActivity()
+        waitAndOpenActivity(isLoggedIn)
     }
+
+    private fun waitAndOpenActivity(loggedIn: Boolean) {
+        Log.d(TAG, "waitAndOpenActivity: loggedIn $loggedIn")
+        val bundle = Bundle().apply {
+            if (loggedIn) putString(
+                Constant.KEY.EMAIL_KEY, PreferenceHelper.getString(
+                    Constant.KEY.EMAIL_KEY
+                )
+            )
+            return@apply
+        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            openActivity(
+                bundle,
+
+                )
+        }, 5000)
+    }
+
+    private fun openActivity(bundle: Bundle) { //
+        val intent =
+            Intent(this, if (bundle.isEmpty) Login::class.java else DashboardActivity::class.java)
+        intent.putExtras(bundle)
+        startActivity(intent)
+        finish()
+    }
+
+
+
+
+
 
     private fun waitAndOpenLoginActivity() {
         Log.d(TAG, "waitAndOpenLoginActivity: ")
