@@ -1,8 +1,6 @@
 package com.bhanit.learnonex.fragment
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -13,7 +11,7 @@ import com.bhanit.learnonex.R
 import com.bhanit.learnonex.SecondFragment
 import com.bhanit.learnonex.databinding.ActivityMyFragmentBinding
 
-class MyFragmentActivity : AppCompatActivity() {
+class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActivityInteraction {
 
     private lateinit var mBinding: ActivityMyFragmentBinding
 
@@ -29,14 +27,6 @@ class MyFragmentActivity : AppCompatActivity() {
         )
 
         openFirstFragment()
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            openSecondFragment()
-        }, 3000)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            openFirstFragment()
-        }, 6000)
     }
 
     private fun openSecondFragment() {
@@ -101,6 +91,15 @@ class MyFragmentActivity : AppCompatActivity() {
 
 
     companion object {
-        private const val TAG = "MyFragmentActivity"
+        private const val TAG = "GAURAV MyFragmentActivity"
+    }
+
+    override fun previousCall() {
+        Log.d(TAG, "previousCall: ")
+    }
+
+    override fun nextCall() {
+        Log.d(TAG, "nextCall: ")
+        openSecondFragment()
     }
 }
