@@ -2,6 +2,7 @@ package com.bhanit.learnonex.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -11,39 +12,41 @@ import com.bhanit.learnonex.R
 import com.bhanit.learnonex.SecondFragment
 import com.bhanit.learnonex.databinding.ActivityMyFragmentBinding
 
-class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActivityInteraction {
+class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActivityInteraction,
+    SecondFragment.SecondFragmentActivityInteraction {
 
     private lateinit var mBinding: ActivityMyFragmentBinding
 
     private val mManager = supportFragmentManager
-    private lateinit var mFirstFragment: FirstFragment
-    private lateinit var mSecondFragment: SecondFragment
+    private val mFirstFragment: FirstFragment by lazy { FirstFragment() }
+    private val mSecondFragment: SecondFragment by lazy { SecondFragment() }
     private lateinit var mCurrentVisibleFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: ")
         mBinding = DataBindingUtil.setContentView<ActivityMyFragmentBinding>(
             this, R.layout.activity_my_fragment
         )
-
+        Log.d(TAG, "onCreate: mFirstFragment $mFirstFragment mSecondFragment $mSecondFragment")
         openFirstFragment()
     }
 
     private fun openSecondFragment() {
         Log.d(TAG, "openSecondFragment:")
         if (::mCurrentVisibleFragment.isInitialized) hideFragment(mCurrentVisibleFragment)
-        if (!::mSecondFragment.isInitialized) {
-            mSecondFragment = SecondFragment()
-        }
+//        if (!::mSecondFragment.isInitialized) {
+//            mSecondFragment = SecondFragment()
+//        }
         addShowFragment(mSecondFragment)
     }
 
     private fun openFirstFragment() {
         Log.d(TAG, "openFirstFragment:")
         if (::mCurrentVisibleFragment.isInitialized) hideFragment(mCurrentVisibleFragment)
-        if (!::mFirstFragment.isInitialized) {
-            mFirstFragment = FirstFragment()
-        }
+//        if (!::mFirstFragment.isInitialized) {
+//            mFirstFragment = FirstFragment()
+//        }
         addShowFragment(mFirstFragment)
     }
 
@@ -89,6 +92,10 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
         showFragment(fragment)
     }
 
+    private fun showToast(message: String) {
+        Log.d(TAG, "showToast: message $message")
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 
     companion object {
         private const val TAG = "GAURAV MyFragmentActivity"
@@ -96,10 +103,19 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
 
     override fun previousCall() {
         Log.d(TAG, "previousCall: ")
+        if (mCurrentVisibleFragment is FirstFragment) {
+            showToast("No previous fragment found.")
+            return
+        }
+        openFirstFragment()
     }
 
     override fun nextCall() {
         Log.d(TAG, "nextCall: ")
+        if (mCurrentVisibleFragment is SecondFragment) {
+            showToast("No next fragment found.")
+            return
+        }
         openSecondFragment()
     }
 }

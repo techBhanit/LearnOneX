@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bhanit.learnonex.databinding.FragmentFirstBinding
 import com.bhanit.learnonex.fragment.MyFragmentActivity
@@ -43,6 +44,7 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
         Log.d(TAG, "setOnClickListener: ")
         binding.buttonPrevious.setOnClickListener(this)
         binding.buttonNext.setOnClickListener(this)
+        binding.showToast.setOnClickListener(this)
 
     }
 
@@ -71,6 +73,11 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
         super.onDestroy()
     }
 
+    private fun showToast(message: String) {
+        Log.d(TAG, "showToast: message $message")
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     override fun onClick(v: View) {
         Log.d(TAG, "onClick: ")
         // When is similiar to switch
@@ -83,6 +90,10 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
             R.id.button_next -> {
                 Log.d(TAG, "onClick: button_next")
                 mInteraction.nextCall()
+            }
+            R.id.show_toast -> {
+                Log.d(TAG, "onClick: ")
+                showToast("SHOW TOAST")
             }
 
         }

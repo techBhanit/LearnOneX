@@ -43,7 +43,14 @@
         app:layout_constraintStart_toEndOf="@id/button_previous"
         app:layout_constraintTop_toTopOf="@id/guideline_two" />
 
-
+    <Button
+        android:id="@+id/show_toast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SHOW TOAST"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_next" />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
