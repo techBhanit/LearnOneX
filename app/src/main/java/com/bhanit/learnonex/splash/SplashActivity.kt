@@ -7,7 +7,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.bhanit.learnonex.R
-import com.bhanit.learnonex.dashboard.DashboardActivity
+import com.bhanit.learnonex.fragment.MyFragmentActivity
 import com.bhanit.learnonex.login.Login
 import com.bhanit.learnonex.utils.Constant
 import com.bhanit.learnonex.utils.PreferenceHelper
@@ -77,15 +77,14 @@ class SplashActivity : AppCompatActivity() {
         }
         Handler(Looper.getMainLooper()).postDelayed({
             openActivity(
-                bundle,
-
-                )
+                bundle
+            )
         }, 5000)
     }
 
     private fun openActivity(bundle: Bundle) { //
         val intent =
-            Intent(this, if (bundle.isEmpty) Login::class.java else DashboardActivity::class.java)
+            Intent(this, if (bundle.isEmpty) Login::class.java else MyFragmentActivity::class.java)
         intent.putExtras(bundle)
         startActivity(intent)
         finish()
@@ -122,7 +121,7 @@ class SplashActivity : AppCompatActivity() {
         Log.d(TAG, "openDashboard: ")
         val bundle = Bundle()
         bundle.putString(Constant.KEY.EMAIL_KEY, email)
-        val intent = Intent(this, DashboardActivity::class.java)
+        val intent = Intent(this, MyFragmentActivity::class.java)
         intent.putExtras(bundle)
         startActivity(intent)
         finish()

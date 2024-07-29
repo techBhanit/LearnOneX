@@ -6,10 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bhanit.learnonex.databinding.FragmentFirstBinding
 import com.bhanit.learnonex.fragment.MyFragmentActivity
+import com.bhanit.learnonex.utils.CustomHelper
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -23,6 +23,8 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
     private val binding get() = _binding!!
 
     private lateinit var mInteraction: FirstFragmentActivityInteraction
+
+    private lateinit var mEmail: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +40,14 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: ")
         setOnClickListener()
+        setDataOnText()
+    }
+
+    private fun setDataOnText() {
+        Log.d(TAG, "setDataOnText: ")
+        if (!::mEmail.isInitialized)
+            return
+        binding.dataFragmentTextview.text = mEmail
     }
 
     private fun setOnClickListener() {
@@ -73,10 +83,6 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
         super.onDestroy()
     }
 
-    private fun showToast(message: String) {
-        Log.d(TAG, "showToast: message $message")
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
 
     override fun onClick(v: View) {
         Log.d(TAG, "onClick: ")
@@ -89,19 +95,24 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
 
             R.id.button_next -> {
                 Log.d(TAG, "onClick: button_next")
-                mInteraction.nextCall()
+                mInteraction.nextCall(binding.editTextView.text.toString())
             }
             R.id.show_toast -> {
                 Log.d(TAG, "onClick: ")
-                showToast("SHOW TOAST")
+                CustomHelper.showToast("SHOW TOAST", requireContext())
             }
 
         }
     }
 
+    fun passData(email: String) {
+        Log.d(TAG, "passData: email $email")
+        mEmail = email
+    }
+
     interface FirstFragmentActivityInteraction {
         fun previousCall()
-        fun nextCall()
+        fun nextCall(data: String)
     }
 
     companion object {

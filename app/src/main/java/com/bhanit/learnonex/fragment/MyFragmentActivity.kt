@@ -2,7 +2,6 @@ package com.bhanit.learnonex.fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -11,6 +10,8 @@ import com.bhanit.learnonex.FirstFragment
 import com.bhanit.learnonex.R
 import com.bhanit.learnonex.SecondFragment
 import com.bhanit.learnonex.databinding.ActivityMyFragmentBinding
+import com.bhanit.learnonex.utils.Constant
+import com.bhanit.learnonex.utils.CustomHelper
 
 class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActivityInteraction,
     SecondFragment.SecondFragmentActivityInteraction {
@@ -20,6 +21,7 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
     private val mManager = supportFragmentManager
     private val mFirstFragment: FirstFragment by lazy { FirstFragment() }
     private val mSecondFragment: SecondFragment by lazy { SecondFragment() }
+    private lateinit var mEmail: String
     private lateinit var mCurrentVisibleFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +31,19 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
             this, R.layout.activity_my_fragment
         )
         Log.d(TAG, "onCreate: mFirstFragment $mFirstFragment mSecondFragment $mSecondFragment")
+        getDataFromBundle()
         openFirstFragment()
+        mFirstFragment.passData(mEmail)
+    }
+
+    private fun getDataFromBundle() {
+        Log.d(TAG, "getDataFromBundle: ")
+        val email: String? = intent.extras?.getString(Constant.KEY.EMAIL_KEY)
+        val password: String? = intent.extras?.getString(Constant.KEY.EMAIL_KEY)
+        Log.d(
+            TAG, "getDataFromBundle: receivedValue $email receivedValueInt $password"
+        )
+        email?.let { mEmail = it }
     }
 
     private fun openSecondFragment() {
@@ -86,16 +100,12 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
         if (!fragment.isAdded) {
             Log.d(TAG, "addShowFragment: fragment Added")
             mCurrentVisibleFragment = fragment
-            fragmentTransaction.add(R.id.fragment_view, fragment).commitNowAllowingStateLoss()
+            fragmentTransaction.add(R.id.fragment_view, fragment).commit()
             return
         }
         showFragment(fragment)
     }
 
-    private fun showToast(message: String) {
-        Log.d(TAG, "showToast: message $message")
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
 
     companion object {
         private const val TAG = "GAURAV MyFragmentActivity"
@@ -104,18 +114,25 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
     override fun previousCall() {
         Log.d(TAG, "previousCall: ")
         if (mCurrentVisibleFragment is FirstFragment) {
-            showToast("No previous fragment found.")
+            CustomHelper.showToast("No previous fragment found.", this)
             return
         }
         openFirstFragment()
     }
 
-    override fun nextCall() {
+    override fun nextCall(data: String) {
         Log.d(TAG, "nextCall: ")
         if (mCurrentVisibleFragment is SecondFragment) {
-            showToast("No next fragment found.")
+            CustomHelper.showToast("No next fragment found.", this)
             return
         }
+        mSecondFragment.passData(data)
         openSecondFragment()
+    }
+
+
+    override fun onBackPressed() {
+        Log.d(TAG, "onBackPressed:mCurrentVisibleFragment  $mCurrentVisibleFragment")
+        super.onBackPressed()
     }
 }

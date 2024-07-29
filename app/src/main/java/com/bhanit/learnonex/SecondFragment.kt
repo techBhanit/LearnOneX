@@ -23,7 +23,7 @@ class SecondFragment : Fragment(), View.OnClickListener {
     private val binding get() = _binding!!
 
     private lateinit var mInteraction: SecondFragmentActivityInteraction
-
+    private lateinit var mData: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,13 +38,21 @@ class SecondFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: ")
         setOnClickListener()
+        setDataOnTextView()
+    }
+
+    private fun setDataOnTextView() {
+        Log.d(TAG, "setDataOnTextView: ")
+        if (!::mData.isInitialized) {
+            return
+        }
+        binding.dataFragmentTextview.text = mData
     }
 
     private fun setOnClickListener() {
         Log.d(TAG, "setOnClickListener: ")
         binding.buttonPrevious.setOnClickListener(this)
         binding.buttonNext.setOnClickListener(this)
-
     }
 
     override fun onResume() {
@@ -84,15 +92,20 @@ class SecondFragment : Fragment(), View.OnClickListener {
 
             R.id.button_next -> {
                 Log.d(TAG, "onClick: button_next")
-                mInteraction.nextCall()
+                mInteraction.nextCall("")
             }
 
         }
     }
 
+    fun passData(data: String) {
+        Log.d(TAG, "passData: data $data")
+        mData = data
+    }
+
     interface SecondFragmentActivityInteraction {
         fun previousCall()
-        fun nextCall()
+        fun nextCall(data: String)
     }
 
     companion object {

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.bhanit.learnonex.R
 import com.bhanit.learnonex.dashboard.DashboardActivity
+import com.bhanit.learnonex.fragment.MyFragmentActivity
 import com.bhanit.learnonex.utils.Constant
 import com.bhanit.learnonex.utils.PreferenceHelper
 
@@ -82,7 +83,8 @@ class Login : AppCompatActivity(), View.OnClickListener {
             PreferenceHelper.putBoolean(
                 Constant.KEY.IS_LOGGED_IN, true
             )
-            openDashboard()
+            openMyFragmentActivity()
+//            openDashboard()
         }
     }
 
@@ -92,6 +94,18 @@ class Login : AppCompatActivity(), View.OnClickListener {
         bundle.putString(Constant.KEY.EMAIL_KEY, mEmail)
         bundle.putString(Constant.KEY.PASSWORD_KEY, mPassword)
         val intent = Intent(this, DashboardActivity::class.java)
+        intent.putExtras(bundle)
+        startActivity(intent)
+        finish()
+    }
+
+
+    private fun openMyFragmentActivity() {
+        Log.d(TAG, "openMyFragmentActivity: ")
+        val bundle = Bundle()
+        bundle.putString(Constant.KEY.EMAIL_KEY, mEmail)
+        bundle.putString(Constant.KEY.PASSWORD_KEY, mPassword)
+        val intent = Intent(this, MyFragmentActivity::class.java)
         intent.putExtras(bundle)
         startActivity(intent)
         finish()
