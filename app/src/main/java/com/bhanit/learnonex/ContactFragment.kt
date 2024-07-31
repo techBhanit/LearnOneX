@@ -7,31 +7,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bhanit.learnonex.databinding.FragmentFirstBinding
-import com.bhanit.learnonex.fragment.MyFragmentActivity
-import com.bhanit.learnonex.utils.CustomHelper
+import com.bhanit.learnonex.databinding.FragmentContactBinding
+import com.bhanit.learnonex.fragment.DashboardActivity
 
 /**
- * A simple [Fragment] subclass as the default destination in the navigation.
+ * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class FirstFragment(private val buttonName: String = "One") : Fragment(), View.OnClickListener {
+class ContactFragment : Fragment(), View.OnClickListener {
 
-    private var _binding: FragmentFirstBinding? = null
+
+    private var _binding: FragmentContactBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var mInteraction: FirstFragmentActivityInteraction
-
-    private lateinit var mEmail: String
-
+    private lateinit var mInteraction: SecondFragmentActivityInteraction
+    private lateinit var mData: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         Log.d(TAG, "onCreateView: ")
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = FragmentContactBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -40,22 +38,21 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: ")
         setOnClickListener()
-        setDataOnText()
+        setDataOnTextView()
     }
 
-    private fun setDataOnText() {
-        Log.d(TAG, "setDataOnText: ")
-        if (!::mEmail.isInitialized)
+    private fun setDataOnTextView() {
+        Log.d(TAG, "setDataOnTextView: ")
+        if (!::mData.isInitialized) {
             return
-        binding.dataFragmentTextview.text = mEmail
+        }
+        binding.dataFragmentTextview.text = mData
     }
 
     private fun setOnClickListener() {
         Log.d(TAG, "setOnClickListener: ")
         binding.buttonPrevious.setOnClickListener(this)
         binding.buttonNext.setOnClickListener(this)
-        binding.showToast.setOnClickListener(this)
-
     }
 
     override fun onResume() {
@@ -69,9 +66,10 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
         super.onDestroyView()
         _binding = null
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mInteraction = context as MyFragmentActivity
+        mInteraction = context as DashboardActivity
 
     }
 
@@ -82,7 +80,6 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
     override fun onDestroy() {
         super.onDestroy()
     }
-
 
     override fun onClick(v: View) {
         Log.d(TAG, "onClick: ")
@@ -95,28 +92,23 @@ class FirstFragment(private val buttonName: String = "One") : Fragment(), View.O
 
             R.id.button_next -> {
                 Log.d(TAG, "onClick: button_next")
-                mInteraction.nextCall(binding.editTextView.text.toString())
-            }
-            R.id.show_toast -> {
-                Log.d(TAG, "onClick: ")
-                CustomHelper.showToast("SHOW TOAST", requireContext())
+                mInteraction.nextCall("")
             }
 
         }
     }
 
-    fun passData(email: String) {
-        Log.d(TAG, "passData: email $email")
-        mEmail = email
+    fun passData(data: String) {
+        Log.d(TAG, "passData: data $data")
+        mData = data
     }
 
-    interface FirstFragmentActivityInteraction {
+    interface SecondFragmentActivityInteraction {
         fun previousCall()
         fun nextCall(data: String)
     }
 
     companion object {
-        private const val TAG = "GAURAV FirstFragment"
+        private const val TAG = "GAURAV SecondFragment"
     }
-
 }

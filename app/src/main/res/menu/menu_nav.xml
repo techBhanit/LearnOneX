@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.bhanit.learnonex.fragment.DashboardActivity">
+    <item
+        android:id="@+id/dashboard_menu_id"
+        android:icon="@drawable/dashboard"
+        android:title="Dashboard" />
+    <item
+        android:id="@+id/contacts_menu_id"
+        android:icon="@drawable/contact_icon"
+        android:title="Contacts" />
+    <item
+        android:id="@+id/support"
+        android:icon="@drawable/support_icon"
+        android:title="Support" />
+</menu>

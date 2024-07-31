@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstFragment">
+    tools:context=".ContactFragment">
 
     <TextView
         android:id="@+id/first_fragment_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="First Fragment"
+        android:text="Second Fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/guideline" />
@@ -20,21 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@id/edit_text_view"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_two"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/guideline" />
-
-    <EditText
-        android:id="@+id/edit_text_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text=""
-        app:layout_constraintBottom_toTopOf="@id/guideline_two"
-        app:layout_constraintEnd_toEndOf="@id/button_next"
-        app:layout_constraintStart_toStartOf="@id/button_previous"
-        app:layout_constraintTop_toBottomOf="@id/data_fragment_textview" />
-
 
     <Button
         android:id="@+id/button_previous"
@@ -54,14 +43,7 @@
         app:layout_constraintStart_toEndOf="@id/button_previous"
         app:layout_constraintTop_toTopOf="@id/guideline_two" />
 
-    <Button
-        android:id="@+id/show_toast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SHOW TOAST"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_next" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"

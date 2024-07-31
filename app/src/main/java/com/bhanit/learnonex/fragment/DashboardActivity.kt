@@ -6,34 +6,67 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.bhanit.learnonex.FirstFragment
+import com.bhanit.learnonex.ContactFragment
+import com.bhanit.learnonex.DashboardFragment
 import com.bhanit.learnonex.R
-import com.bhanit.learnonex.SecondFragment
-import com.bhanit.learnonex.databinding.ActivityMyFragmentBinding
+import com.bhanit.learnonex.databinding.ActivityDashboardBinding
 import com.bhanit.learnonex.utils.Constant
 import com.bhanit.learnonex.utils.CustomHelper
 
-class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActivityInteraction,
-    SecondFragment.SecondFragmentActivityInteraction {
+class DashboardActivity : AppCompatActivity(), DashboardFragment.FirstFragmentActivityInteraction,
+    ContactFragment.SecondFragmentActivityInteraction {
 
-    private lateinit var mBinding: ActivityMyFragmentBinding
+    private lateinit var mBinding: ActivityDashboardBinding
 
     private val mManager = supportFragmentManager
-    private val mFirstFragment: FirstFragment by lazy { FirstFragment() }
-    private val mSecondFragment: SecondFragment by lazy { SecondFragment() }
+    private lateinit var mDashboardFragment: DashboardFragment
+    private val mContactFragment: ContactFragment by lazy { ContactFragment() }
     private lateinit var mEmail: String
     private lateinit var mCurrentVisibleFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: ")
-        mBinding = DataBindingUtil.setContentView<ActivityMyFragmentBinding>(
-            this, R.layout.activity_my_fragment
+        mBinding = DataBindingUtil.setContentView<ActivityDashboardBinding>(
+            this, R.layout.activity_dashboard
         )
-        Log.d(TAG, "onCreate: mFirstFragment $mFirstFragment mSecondFragment $mSecondFragment")
+//        Log.d(TAG, "onCreate: mFirstFragment $mFirstFragment mSecondFragment $mSecondFragment")
+        setOnClickListeners()
         getDataFromBundle()
-        openFirstFragment()
-        mFirstFragment.passData(mEmail)
+        openDashboardFragment()
+    }
+
+    private fun setOnClickListeners() {
+        Log.d(TAG, "setOnClickListeners: ")
+        mBinding.appBar.setOnItemSelectedListener { menuItem ->
+            return@setOnItemSelectedListener when (menuItem.itemId) {
+                R.id.dashboard_menu_id -> {
+                    Log.d(TAG, "setOnClickListeners: dashboard_menu_id ")
+                    if (mCurrentVisibleFragment !is DashboardFragment)
+                        openDashboardFragment()
+                    true
+                }
+
+                R.id.contacts_menu_id -> {
+                    Log.d(TAG, "setOnClickListeners: contacts_menu_id ")
+                    if (mCurrentVisibleFragment !is ContactFragment)
+                        openContactFragment()
+                    true
+
+                }
+
+                R.id.support -> {
+                    Log.d(TAG, "setOnClickListeners: support ")
+                    true
+
+                }
+
+                else -> {
+                    false
+                }
+            }
+
+        }
     }
 
     private fun getDataFromBundle() {
@@ -46,22 +79,23 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
         email?.let { mEmail = it }
     }
 
-    private fun openSecondFragment() {
+    private fun openContactFragment() {
         Log.d(TAG, "openSecondFragment:")
         if (::mCurrentVisibleFragment.isInitialized) hideFragment(mCurrentVisibleFragment)
 //        if (!::mSecondFragment.isInitialized) {
 //            mSecondFragment = SecondFragment()
 //        }
-        addShowFragment(mSecondFragment)
+        addShowFragment(mContactFragment)
     }
 
-    private fun openFirstFragment() {
+    private fun openDashboardFragment() {
         Log.d(TAG, "openFirstFragment:")
         if (::mCurrentVisibleFragment.isInitialized) hideFragment(mCurrentVisibleFragment)
-//        if (!::mFirstFragment.isInitialized) {
-//            mFirstFragment = FirstFragment()
-//        }
-        addShowFragment(mFirstFragment)
+        if (!::mDashboardFragment.isInitialized) {
+            mDashboardFragment = DashboardFragment()
+        }
+        addShowFragment(mDashboardFragment)
+        mDashboardFragment.passData(mEmail)
     }
 
     /**
@@ -96,10 +130,10 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
      */
     private fun addShowFragment(fragment: Fragment) {
         Log.d(TAG, "addShowFragment: $fragment")
-        val fragmentTransaction = mManager.beginTransaction()
         if (!fragment.isAdded) {
             Log.d(TAG, "addShowFragment: fragment Added")
             mCurrentVisibleFragment = fragment
+            val fragmentTransaction = mManager.beginTransaction()
             fragmentTransaction.add(R.id.fragment_view, fragment).commit()
             return
         }
@@ -113,26 +147,31 @@ class MyFragmentActivity : AppCompatActivity(), FirstFragment.FirstFragmentActiv
 
     override fun previousCall() {
         Log.d(TAG, "previousCall: ")
-        if (mCurrentVisibleFragment is FirstFragment) {
+        if (mCurrentVisibleFragment is DashboardFragment) {
             CustomHelper.showToast("No previous fragment found.", this)
             return
         }
-        openFirstFragment()
+        openDashboardFragment()
     }
 
     override fun nextCall(data: String) {
         Log.d(TAG, "nextCall: ")
-        if (mCurrentVisibleFragment is SecondFragment) {
+        if (mCurrentVisibleFragment is ContactFragment) {
             CustomHelper.showToast("No next fragment found.", this)
             return
         }
-        mSecondFragment.passData(data)
-        openSecondFragment()
+        mContactFragment.passData(data)
+        openContactFragment()
     }
 
 
     override fun onBackPressed() {
         Log.d(TAG, "onBackPressed:mCurrentVisibleFragment  $mCurrentVisibleFragment")
         super.onBackPressed()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onRestart: ")
     }
 }

@@ -7,8 +7,8 @@ import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.bhanit.learnonex.R
-import com.bhanit.learnonex.fragment.MyFragmentActivity
-import com.bhanit.learnonex.login.Login
+import com.bhanit.learnonex.fragment.DashboardActivity
+import com.bhanit.learnonex.login.LoginActivity
 import com.bhanit.learnonex.utils.Constant
 import com.bhanit.learnonex.utils.PreferenceHelper
 
@@ -54,15 +54,16 @@ class SplashActivity : AppCompatActivity() {
         val isLoggedIn = PreferenceHelper.getBoolean(
             Constant.KEY.IS_LOGGED_IN
         )
-        if (isLoggedIn) PreferenceHelper.getString(
-            Constant.KEY.EMAIL_KEY
-        )?.let { value -> //final
-            waitAndOpenDashboardActivity(
-                value
-            )
-            return@let
-        }
         waitAndOpenActivity(isLoggedIn)
+//        if (isLoggedIn) PreferenceHelper.getString(
+//            Constant.KEY.EMAIL_KEY
+//        )?.let { value -> //final
+//            waitAndOpenDashboardActivity(
+//                value
+//            )
+//            return@let
+//        }
+//        waitAndOpenActivity(isLoggedIn)
     }
 
     private fun waitAndOpenActivity(loggedIn: Boolean) {
@@ -84,57 +85,14 @@ class SplashActivity : AppCompatActivity() {
 
     private fun openActivity(bundle: Bundle) { //
         val intent =
-            Intent(this, if (bundle.isEmpty) Login::class.java else MyFragmentActivity::class.java)
+            Intent(
+                this,
+                if (bundle.isEmpty) LoginActivity::class.java else DashboardActivity::class.java
+            )
         intent.putExtras(bundle)
         startActivity(intent)
         finish()
     }
-
-
-
-
-
-
-    private fun waitAndOpenLoginActivity() {
-        Log.d(TAG, "waitAndOpenLoginActivity: ")
-        val runnable = Runnable {
-            Log.d(TAG, "onCreate: inside runnbale before")
-            openLoginActivity()
-            Log.d(TAG, "onCreate: inside runnbale after")
-        }
-        Handler(Looper.getMainLooper()).postDelayed(runnable, 5000)
-        Log.d(TAG, "onCreate: after")
-    }
-
-    private fun waitAndOpenDashboardActivity(email: String) {
-        Log.d(TAG, "waitAndOpenDashboardActivity: ")
-        val runnable = Runnable {
-            Log.d(TAG, "onCreate: inside runnbale before")
-            openDashboard(email)
-            Log.d(TAG, "onCreate: inside runnbale after")
-        }
-        Handler(Looper.getMainLooper()).postDelayed(runnable, 5000)
-        Log.d(TAG, "onCreate: after")
-    }
-
-    private fun openDashboard(email: String) {
-        Log.d(TAG, "openDashboard: ")
-        val bundle = Bundle()
-        bundle.putString(Constant.KEY.EMAIL_KEY, email)
-        val intent = Intent(this, MyFragmentActivity::class.java)
-        intent.putExtras(bundle)
-        startActivity(intent)
-        finish()
-    }
-
-
-    private fun openLoginActivity() {
-        Log.d(TAG, "openLoginActivity: ")
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
-        finish()
-    }
-
     override fun onStart() {
         super.onStart()
         Log.d(TAG, "onStart: ")

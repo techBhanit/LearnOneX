@@ -7,29 +7,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bhanit.learnonex.databinding.FragmentSecondBinding
-import com.bhanit.learnonex.fragment.MyFragmentActivity
+import com.bhanit.learnonex.databinding.FragmentDashboardBinding
+import com.bhanit.learnonex.fragment.DashboardActivity
+import com.bhanit.learnonex.utils.CustomHelper
 
 /**
- * A simple [Fragment] subclass as the second destination in the navigation.
+ * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class SecondFragment : Fragment(), View.OnClickListener {
+class DashboardFragment(private val buttonName: String = "One") : Fragment(), View.OnClickListener {
 
-
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentDashboardBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var mInteraction: SecondFragmentActivityInteraction
-    private lateinit var mData: String
+    private lateinit var mInteraction: FirstFragmentActivityInteraction
+
+    private lateinit var mEmail: String
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         Log.d(TAG, "onCreateView: ")
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -38,21 +40,22 @@ class SecondFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: ")
         setOnClickListener()
-        setDataOnTextView()
+        setDataOnText()
     }
 
-    private fun setDataOnTextView() {
-        Log.d(TAG, "setDataOnTextView: ")
-        if (!::mData.isInitialized) {
+    private fun setDataOnText() {
+        Log.d(TAG, "setDataOnText: ")
+        if (!::mEmail.isInitialized)
             return
-        }
-        binding.dataFragmentTextview.text = mData
+        binding.dataFragmentTextview.text = mEmail
     }
 
     private fun setOnClickListener() {
         Log.d(TAG, "setOnClickListener: ")
         binding.buttonPrevious.setOnClickListener(this)
         binding.buttonNext.setOnClickListener(this)
+        binding.showToast.setOnClickListener(this)
+
     }
 
     override fun onResume() {
@@ -66,10 +69,9 @@ class SecondFragment : Fragment(), View.OnClickListener {
         super.onDestroyView()
         _binding = null
     }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mInteraction = context as MyFragmentActivity
+        mInteraction = context as DashboardActivity
 
     }
 
@@ -80,6 +82,7 @@ class SecondFragment : Fragment(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
     }
+
 
     override fun onClick(v: View) {
         Log.d(TAG, "onClick: ")
@@ -92,23 +95,28 @@ class SecondFragment : Fragment(), View.OnClickListener {
 
             R.id.button_next -> {
                 Log.d(TAG, "onClick: button_next")
-                mInteraction.nextCall("")
+                mInteraction.nextCall(binding.editTextView.text.toString())
+            }
+            R.id.show_toast -> {
+                Log.d(TAG, "onClick: ")
+                CustomHelper.showToast("SHOW TOAST", requireContext())
             }
 
         }
     }
 
-    fun passData(data: String) {
-        Log.d(TAG, "passData: data $data")
-        mData = data
+    fun passData(email: String) {
+        Log.d(TAG, "passData: email $email")
+        mEmail = email
     }
 
-    interface SecondFragmentActivityInteraction {
+    interface FirstFragmentActivityInteraction {
         fun previousCall()
         fun nextCall(data: String)
     }
 
     companion object {
-        private const val TAG = "GAURAV SecondFragment"
+        private const val TAG = "GAURAV FirstFragment"
     }
+
 }
