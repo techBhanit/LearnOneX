@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bhanit.learnonex.adapters.ContactAdapter
 import com.bhanit.learnonex.databinding.FragmentContactBinding
 import com.bhanit.learnonex.fragment.DashboardActivity
 
@@ -39,6 +41,14 @@ class ContactFragment : Fragment(), View.OnClickListener {
         Log.d(TAG, "onViewCreated: ")
         setOnClickListener()
         setDataOnTextView()
+        setRecyclerView()
+    }
+
+    private fun setRecyclerView() {
+        Log.d(TAG, "setRecyclerView: ")
+        binding.recyclerView.adapter = ContactAdapter()
+        binding.recyclerView.setLayoutManager(LinearLayoutManager(requireContext()));
+
     }
 
     private fun setDataOnTextView() {
@@ -46,13 +56,10 @@ class ContactFragment : Fragment(), View.OnClickListener {
         if (!::mData.isInitialized) {
             return
         }
-        binding.dataFragmentTextview.text = mData
     }
 
     private fun setOnClickListener() {
         Log.d(TAG, "setOnClickListener: ")
-        binding.buttonPrevious.setOnClickListener(this)
-        binding.buttonNext.setOnClickListener(this)
     }
 
     override fun onResume() {
@@ -85,15 +92,6 @@ class ContactFragment : Fragment(), View.OnClickListener {
         Log.d(TAG, "onClick: ")
         // When is similiar to switch
         when (v.id) {
-            R.id.button_previous -> {
-                Log.d(TAG, "onClick: button_previous")
-                mInteraction.previousCall()
-            }
-
-            R.id.button_next -> {
-                Log.d(TAG, "onClick: button_next")
-                mInteraction.nextCall("")
-            }
 
         }
     }
