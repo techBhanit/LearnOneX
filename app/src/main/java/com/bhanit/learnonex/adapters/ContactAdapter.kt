@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bhanit.learnonex.databinding.ContactViewBinding
+import com.bhanit.learnonex.models.Contact
 
-class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
+class ContactAdapter(private val contacts: ArrayList<Contact>) :
+    RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         val binding = ContactViewBinding.inflate(
@@ -17,20 +19,21 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder: ")
-        holder.bind("One")
+        holder.bind(contacts[position])
     }
 
     override fun getItemCount(): Int {
         Log.d(TAG, "getItemCount: ")
-        return 10
+        return contacts.size
     }
 
 
     open class ContactViewHolder(private val binding: ContactViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(contact: String) {
-            binding.name.text = contact;
+        fun bind(contact: Contact) {
+            binding.name.text = contact.name
+            binding.number.text = contact.number.toString()
         }
     }
 

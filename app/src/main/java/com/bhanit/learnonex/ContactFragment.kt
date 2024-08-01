@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bhanit.learnonex.adapters.ContactAdapter
 import com.bhanit.learnonex.databinding.FragmentContactBinding
 import com.bhanit.learnonex.fragment.DashboardActivity
+import com.bhanit.learnonex.models.Address
+import com.bhanit.learnonex.models.Contact
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -46,9 +48,26 @@ class ContactFragment : Fragment(), View.OnClickListener {
 
     private fun setRecyclerView() {
         Log.d(TAG, "setRecyclerView: ")
-        binding.recyclerView.adapter = ContactAdapter()
-        binding.recyclerView.setLayoutManager(LinearLayoutManager(requireContext()));
+        val contacts = getListOfContacts()
+        binding.recyclerView.adapter = ContactAdapter(contacts)
+        val linearLayoutManager =
+            LinearLayoutManager(requireContext());
+        binding.recyclerView.setLayoutManager(linearLayoutManager)
+    }
 
+    private fun getListOfContacts(): ArrayList<Contact> {
+        Log.d(TAG, "getListOfContacts: ")
+        val contactList = arrayListOf<Contact>();
+        for (i in 1..50) {
+            val contact = Contact(
+                id = i,
+                name = "Rahul + $i",
+                number = (i * 111111111),
+                address = Address(road = "dummy", pinCode = i)
+            )
+            contactList.add(contact)
+        }
+        return contactList
     }
 
     private fun setDataOnTextView() {
